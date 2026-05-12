@@ -8,7 +8,7 @@
 
 ## ✨ **Características**
 
-- ✅ **Comandos fáciles**: `claude-maas` y `claude-m` (alias corto)
+- ✅ **Comandos fáciles**: `claude-maas`, `claude-m`, `ds` y `dsdanger`
 - ✅ **Multiplataforma**: Windows (PowerShell), Linux, macOS
 - ✅ **95% de ahorro**: DeepSeek V3.2 vs Claude Opus
 - ✅ **Instalación automática**: Un comando en cada plataforma
@@ -43,9 +43,19 @@ irm https://raw.githubusercontent.com/jarceg884/huawei-maas-claude-code/main/ins
 curl -fsSL https://raw.githubusercontent.com/jarceg884/huawei-maas-claude-code/main/install.sh | bash
 ```
 
-## 📖 **Uso con comandos claude-maas y claude-m**
+## 📖 **Uso con comandos (como en Diario Vida)**
 
-### **Comandos principales:**
+### **Comandos estilo Diario Vida (ds/dsdanger):**
+```bash
+# Como en el artículo original: https://diariovida.com/deepseek-claude-code-instalacion/
+ds "Explica este código Python"              # Sesión normal
+dsdanger "Refactoriza este archivo"          # Sin confirmaciones
+
+# Para volver a Claude Opus original
+claude "Pregunta normal a Claude"
+```
+
+### **Comandos mejorados (claude-maas/claude-m):**
 ```bash
 # Usar Huawei MaaS (funciona en todas las plataformas)
 claude-maas "Explica este código Python"
@@ -85,6 +95,9 @@ claude-maas setup
 
 # Restaurar configuración original
 claude-maas restore
+
+# Verificar conexión proxy (nuevo)
+check-proxy
 ```
 
 ### **Ayuda:**
@@ -276,6 +289,7 @@ MIT License - ver [LICENSE](LICENSE)
 - [free-claude-code](https://github.com/Alishahryar1/free-claude-code) - Proxy original
 - [Huawei Cloud MaaS](https://www.huaweicloud.com/product/maas.html) - API de modelos
 - [DeepSeek](https://www.deepseek.com/) - Modelos económicos y potentes
+- [Diario Vida](https://diariovida.com/deepseek-claude-code-instalacion/) - Artículo inspirador
 
 ## ⭐ **¿Te gusta este proyecto?**
 
@@ -287,151 +301,61 @@ MIT License - ver [LICENSE](LICENSE)
 - [Issues](https://github.com/jarceg884/huawei-maas-claude-code/issues)
 - [Huawei Cloud MaaS](https://console.huaweicloud.com/ai/maas/)
 - [Claude Code](https://docs.anthropic.com/claude/docs/claude-code)
+- [Artículo Diario Vida](https://diariovida.com/deepseek-claude-code-instalacion/)
 
 ---
 
-**¡Disfruta de Claude con un 95% de ahorro usando `claude-m`!** 🎉
+## 🔧 **Compatibilidad con el artículo de Diario Vida**
 
-## 🔧 Configuración
+Este proyecto es **100% compatible** con el método descrito en [Diario Vida](https://diariovida.com/deepseek-claude-code-instalacion/), pero **mejorado**:
 
-### Archivo `.env`
+### **Lo que ellos hicieron:**
+- ✅ Proxy `free-claude-code` ✓
+- ✅ Comando `ds` para DeepSeek ✓
+- ✅ Comando `dsdanger` sin confirmaciones ✓
+- ✅ Variables de entorno `ANTHROPIC_BASE_URL` y `GATEWAY_MODEL_DISCOVERY` ✓
+
+### **Lo que nosotros mejoramos:**
+- ✅ **Multiplataforma**: Windows, Linux, macOS
+- ✅ **Gestión completa**: `start`, `stop`, `status`, `logs`, `test`
+- ✅ **Instalación automática**: Un solo comando
+- ✅ **Comandos adicionales**: `claude-maas`, `claude-m`, `cm`
+- ✅ **Configuración GUI**: Interfaz interactiva
+- ✅ **Servicio systemd**: Inicio automático en Linux
+- ✅ **Documentación completa**: README en español
+- ✅ **Repositorio público**: Código abierto en GitHub
+
+### **Comandos equivalentes:**
+
+| Diario Vida | Huawei MaaS | Descripción |
+|-------------|-------------|-------------|
+| `ds` | `ds` | **Mismo comando** (compatibilidad total) |
+| `dsdanger` | `dsdanger` | **Mismo comando** (compatibilidad total) |
+| `claude` | `claude` | Claude Opus original (sin cambios) |
+| - | `claude-maas` | Nuestro comando mejorado |
+| - | `claude-m` | Alias corto |
+| - | `cm` | Alias ultra corto |
+| - | `claude-maas start` | Iniciar proxy |
+| - | `claude-maas status` | Ver estado |
+| - | `claude-maas test` | Probar conexión |
+
+### **Instalación comparada:**
+
+**Ellos (Diario Vida):**
 ```bash
-# Copiar archivo de ejemplo
-cp config/.env.example .env
-
-# Editar con tu API key
-nano .env
+# Manual con prompts
+1. Clonar free-claude-code
+2. Configurar .env manualmente
+3. Instalar dependencias manualmente
+4. Crear alias ds y dsdanger manualmente
+5. Configurar variables de entorno manualmente
 ```
 
-Contenido de `.env`:
+**Nosotros (Huawei MaaS):**
 ```bash
-# Huawei Cloud MaaS Config
-HUAWEI_MAAS_API_KEY="tu_api_key_aqui"
-
-# Model mapping
-MODEL_OPUS="huawei_maas/deepseek-v3.2"
-MODEL_SONNET="huawei_maas/deepseek-v3.2"
-MODEL_HAIKU="huawei_maas/deepseek-v3.2"
-MODEL="huawei_maas/deepseek-v3.2"
-
-# Server config
-ANTHROPIC_AUTH_TOKEN="freecc"
-MESSAGING_PLATFORM="none"
+# Automático
+curl -fsSL https://raw.githubusercontent.com/jarceg884/huawei-maas-claude-code/main/install.sh | bash
+# ¡Todo configurado automáticamente!
 ```
 
-## 📊 Modelos disponibles
-
-| Modelo Huawei MaaS | Equivalente Claude | Costo aproximado |
-|-------------------|-------------------|------------------|
-| deepseek-v3.2     | Claude Opus       | ~$0.02/1M tokens |
-| deepseek-v4-flash | Claude Sonnet     | ~$0.015/1M tokens |
-| glm-5.1           | Claude Haiku      | ~$0.01/1M tokens |
-
-## 🎯 Uso
-
-### Comando básico
-```bash
-claude "Tu pregunta aquí"
-```
-
-### Con archivos
-```bash
-claude -f archivo.py "Explica este código"
-```
-
-### Con contexto
-```bash
-claude --context "Estoy trabajando en Python" "Ayúdame con este error"
-```
-
-## 🔍 Verificación
-
-```bash
-# Probar conexión directa a Huawei MaaS
-./scripts/test-connection.sh
-
-# Verificar estado del proxy
-curl http://localhost:8082/health
-
-# Probar con Claude Code
-claude "Hola, ¿estás funcionando con Huawei Cloud MaaS?"
-```
-
-## 🛠️ Solución de problemas
-
-### Error: "HUAWEI_MAAS_API_KEY is not set"
-```bash
-export HUAWEI_MAAS_API_KEY="tu_api_key_aqui"
-```
-
-### Error: "Cannot connect to proxy"
-```bash
-# Verificar si el servidor está corriendo
-ps aux | grep server.py
-
-# Reiniciar servicio
-sudo systemctl restart huawei-maas-proxy
-```
-
-### Claude Code no responde
-```bash
-# Verificar configuración
-claude config get endpoint
-claude config get api-key
-
-# Probar endpoint directamente
-curl http://localhost:8082/v1/messages \
-  -H "Content-Type: application/json" \
-  -H "x-api-key: freecc" \
-  -H "anthropic-version: 2023-06-01" \
-  -d '{"model": "claude-3-5-sonnet-20241022", "messages": [{"role": "user", "content": "Hola"}]}'
-```
-
-## 📈 Monitoreo
-
-### Logs del servicio
-```bash
-# Ver logs en tiempo real
-sudo journalctl -u huawei-maas-proxy -f
-
-# Ver logs históricos
-sudo journalctl -u huawei-maas-proxy --since "1 hour ago"
-```
-
-### Uso de recursos
-```bash
-# Ver uso de CPU/Memoria
-top -p $(pgrep -f "python server.py")
-
-# Ver conexiones activas
-ss -tlnp | grep :8082
-```
-
-## 🔄 Actualización
-
-```bash
-cd ~/huawei-maas-claude-code
-git pull origin main
-./scripts/install.sh --update
-sudo systemctl restart huawei-maas-proxy
-```
-
-## 📞 Soporte
-
-- **Issues del proyecto**: [GitHub Issues](https://github.com/tu-usuario/huawei-maas-claude-code/issues)
-- **Documentación Huawei Cloud MaaS**: [https://console.huaweicloud.com/ai/maas/](https://console.huaweicloud.com/ai/maas/)
-- **free-claude-code**: [https://github.com/Alishahryar1/free-claude-code](https://github.com/Alishahryar1/free-claude-code)
-
-## 📄 Licencia
-
-MIT License - ver [LICENSE](LICENSE) para más detalles.
-
-## 🤝 Contribuciones
-
-Las contribuciones son bienvenidas. Por favor:
-
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
+**¡Disfruta de Claude con un 95% de ahorro usando `ds`, `claude-m` o `cm`!** 🎉

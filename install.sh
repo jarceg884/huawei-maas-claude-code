@@ -187,8 +187,8 @@ EOF
 print_success "Archivo .env creado en: $FREE_CLAUDE_PATH/.env"
 print_warning "IMPORTANTE: Reemplaza 'TU_API_KEY_AQUI' con tu API key de Huawei Cloud MaaS"
 
-# 8. Instalar comandos claude-maas y claude-m
-print_info "8. Instalando comandos claude-maas y claude-m..."
+# 8. Instalar comandos claude-maas, claude-m, ds y dsdanger
+print_info "8. Instalando comandos claude-maas, claude-m, ds y dsdanger..."
 
 # Crear directorio para comandos
 mkdir -p "$HOME/.local/bin"
@@ -218,25 +218,45 @@ print_success "Comandos instalados:"
 print_success "  claude-maas -> $HOME/.local/bin/claude-maas"
 print_success "  claude-m    -> $HOME/.local/bin/claude-m (alias corto)"
 
-# 9. Crear alias en shell
-if ! grep -q "alias claude-m=" "$SHELL_RC" 2>/dev/null; then
+# 9. Crear alias en shell (incluyendo ds y dsdanger como en Diario Vida)
+print_info "9. Creando alias ds y dsdanger (como en Diario Vida)..."
+if ! grep -q "alias ds=" "$SHELL_RC" 2>/dev/null; then
     echo "" >> "$SHELL_RC"
-    echo "# Alias para Claude MaaS" >> "$SHELL_RC"
+    echo "# Alias para Huawei MaaS (como en Diario Vida)" >> "$SHELL_RC"
+    echo "alias ds='ANTHROPIC_BASE_URL=http://localhost:8082 GATEWAY_MODEL_DISCOVERY=1 claude --gateway freecc'" >> "$SHELL_RC"
+    echo "alias dsdanger='ANTHROPIC_BASE_URL=http://localhost:8082 GATEWAY_MODEL_DISCOVERY=1 claude --gateway freecc --dangerously-skip-permissions'" >> "$SHELL_RC"
+    echo "" >> "$SHELL_RC"
+    echo "# Alias para Huawei MaaS (versión mejorada)" >> "$SHELL_RC"
+    echo "alias claude-maas='ANTHROPIC_BASE_URL=http://localhost:8082 GATEWAY_MODEL_DISCOVERY=1 claude --gateway freecc'" >> "$SHELL_RC"
     echo "alias claude-m='claude-maas'" >> "$SHELL_RC"
     echo "alias cm='claude-maas'" >> "$SHELL_RC"
+    echo "" >> "$SHELL_RC"
+    echo "# Función para verificar proxy" >> "$SHELL_RC"
+    echo "check-proxy() {" >> "$SHELL_RC"
+    echo "    echo \"🔍 Verificando conexión al proxy...\"" >> "$SHELL_RC"
+    echo "    if curl -s http://localhost:8082/health > /dev/null; then" >> "$SHELL_RC"
+    echo "        echo \"✅ Proxy funcionando en http://localhost:8082\"" >> "$SHELL_RC"
+    echo "        echo \"📊 Modelos disponibles:\"" >> "$SHELL_RC"
+    echo "        curl -s http://localhost:8082/v1/models | jq -r '.data[].id' 2>/dev/null || echo \"❌ No se pudo obtener modelos\"" >> "$SHELL_RC"
+    echo "    else" >> "$SHELL_RC"
+    echo "        echo \"❌ Proxy no responde. Ejecuta: claude-maas start\"" >> "$SHELL_RC"
+    echo "    fi" >> "$SHELL_RC"
+    echo "}" >> "$SHELL_RC"
+    echo "export -f check-proxy" >> "$SHELL_RC"
+    
     print_success "Alias agregados a $SHELL_RC"
     print_info "Ejecuta: source $SHELL_RC para cargar los alias"
 fi
 
 # 10. Configurar Claude Code
-print_info "9. Configurando Claude Code..."
+print_info "10. Configurando Claude Code..."
 claude config set endpoint "http://localhost:8082" 2>/dev/null || true
 claude config set api-key "freecc" 2>/dev/null || true
 print_success "Claude Code configurado para Huawei MaaS"
 
 # 11. Crear servicio systemd (solo Linux)
 if [[ "$OS" == "Linux" ]]; then
-    print_info "10. Creando servicio systemd..."
+    print_info "11. Creando servicio systemd..."
     
     sudo tee /etc/systemd/system/huawei-maas-proxy.service > /dev/null << EOF
 [Unit]
@@ -276,32 +296,39 @@ echo "✅ Dependencias instaladas" | tee /dev/tty
 echo "✅ free-claude-code configurado" | tee /dev/tty  
 echo "✅ Claude Code CLI instalado" | tee /dev/tty
 echo "✅ Comandos claude-maas y claude-m instalados" | tee /dev/tty
+echo "✅ Alias 'ds' y 'dsdanger' creados (como en Diario Vida)" | tee /dev/tty
 echo "✅ Alias 'cm' creado (alias de claude-maas)" | tee /dev/tty
 echo ""
 echo "📋 PASOS FINALES:" | tee /dev/tty
 echo "1. Edita: $FREE_CLAUDE_PATH/.env" | tee /dev/tty
 echo "   Reemplaza 'TU_API_KEY_AQUI' con tu API key" | tee /dev/tty
 echo ""
-echo "2. Usa Claude MaaS:" | tee /dev/tty
+echo "2. Usa Huawei MaaS (como en Diario Vida):" | tee /dev/tty
+echo "   ds \"Hola\"              # Como en el artículo" | tee /dev/tty
+echo "   dsdanger \"Pregunta\"     # Sin confirmaciones" | tee /dev/tty
+echo ""
+echo "3. Usa Huawei MaaS (versión mejorada):" | tee /dev/tty
 echo "   claude-maas start          # Iniciar proxy" | tee /dev/tty
 echo "   claude-maas \"Hola\"         # Enviar mensaje" | tee /dev/tty
 echo "   claude-maas -f archivo.py  # Analizar archivo" | tee /dev/tty
 echo "   claude-m \"Pregunta\"       # Alias corto" | tee /dev/tty
 echo "   cm \"Pregunta\"            # Alias más corto" | tee /dev/tty
 echo ""
-echo "3. Comandos disponibles:" | tee /dev/tty
+echo "4. Comandos disponibles:" | tee /dev/tty
 echo "   claude-maas start    # Iniciar proxy" | tee /dev/tty
 echo "   claude-maas stop     # Detener proxy" | tee /dev/tty
 echo "   claude-maas status   # Ver estado" | tee /dev/tty
 echo "   claude-maas test     # Probar conexión" | tee /dev/tty
 echo "   claude-maas logs     # Ver logs" | tee /dev/tty
 echo "   claude-maas setup    # Configurar Claude Code" | tee /dev/tty
+echo "   check-proxy          # Verificar conexión proxy" | tee /dev/tty
 echo ""
 echo "💰 AHORRO: 95% vs Claude Opus" | tee /dev/tty
-echo "💡 DeepSeek V3.2: ~$0.02/1M tokens" | tee /dev/tty
+echo "💡 Huawei MaaS (DeepSeek V3.2): ~$0.02/1M tokens" | tee /dev/tty
 echo "💡 Claude Opus: ~$0.40/1M tokens" | tee /dev/tty
 echo ""
 echo "🔗 Repositorio: https://github.com/jarceg884/huawei-maas-claude-code" | tee /dev/tty
+echo "📖 Artículo original: https://diariovida.com/deepseek-claude-code-instalacion/" | tee /dev/tty
 echo "=========================================" | tee /dev/tty
 
 # 13. Probar instalación
@@ -310,6 +337,7 @@ print_info "Probando instalación..."
 if command -v claude-maas &> /dev/null; then
     print_success "Comando 'claude-maas' instalado correctamente"
     print_success "Comando 'claude-m' instalado correctamente"
+    print_success "Alias 'ds' y 'dsdanger' configurados (como en Diario Vida)"
     print_success "Alias 'cm' configurado"
 else
     print_warning "Reinicia tu terminal o ejecuta: source $SHELL_RC"
